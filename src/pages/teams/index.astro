@@ -1,0 +1,41 @@
+---
+export const prerender = true;
+import Layout from '../../layouts/Layout.astro';
+import { fade } from 'astro:transitions';
+
+const response = await fetch("https://statsapi.web.nhl.com/api/v1/teams", {
+  method: "GET",
+  headers: { "Content-Type": "application/json" },
+});
+
+const json = await response.json();
+const { teams } = json;
+---
+<Layout title="All the teams in the NHL">
+	<main>
+<h1>These teams play in the NHL</h1>
+<table>
+  <caption>All NHL Teams</caption>
+  <thead>
+    <th>Name</th>
+    <th>Active since</th>
+    <th>Division</th>
+    <th>Conference</th>
+  </thead>
+  <tbody>
+    {
+      teams.map((team) =>
+        (
+          <tr>
+            <td><a href={`/teams/${team.id}`}>{team.name}</a></td>
+            <td>{team.firstYearOfPlay}</td>
+            <td>{team.conference.name}</td>
+            <td>{team.division.name}</td>
+          </tr>
+        )
+      )
+    }
+  </tbody>
+</table>
+
+</main></Layout>
