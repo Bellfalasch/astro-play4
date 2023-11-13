@@ -1,48 +1,65 @@
 ---
-export const prerender = false
-import Layout from '../../layouts/Layout.astro';
-import { fade } from 'astro:transitions';
+export const prerender = false;
+import Layout from "../../layouts/Layout.astro";
+import { fade } from "astro:transitions";
+import { imagePathFromLocationName } from "../../lib/helpers";
 
 const { team } = Astro.params;
 
-const response = await fetch(`https://statsapi.web.nhl.com/api/v1/teams/${team}`, {
-  method: "GET",
-  headers: { "Content-Type": "application/json" },
-});
+const response = await fetch(
+  `https://statsapi.web.nhl.com/api/v1/teams/${team}`,
+  {
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
+  }
+);
 
 const json = await response.json();
 const { teams } = json;
 
-let teamImgUrl = teams[0].locationName.replaceAll(' ','').replaceAll('.','').replaceAll('é','e').toLowerCase()
-if (teamImgUrl === 'newyork') {
-  if (team == 2) {teamImgUrl += 'islanders'}
-  if (team == 3) {teamImgUrl += 'rangers'}
-}
-teamImgUrl = `/logos/${teamImgUrl}.gif`;
+const teamImgUrl = `/logos/${imagePathFromLocationName(
+  teams[0].locationName,
+  team
+)}.gif`;
 ---
+
 <Layout title={`Information about ${teams[0].name}`}>
-	<main>
-    <h2 transition:animate={fade({ duration: '5s' })}>{teams[0].name}</h2>
-    <img transition:animate={fade({ duration: '5s' })} src={teamImgUrl} style="width:150px; height:100px;"/>
+  <main>
+    <h2 transition:animate={fade({ duration: "5s" })}>{teams[0].name}</h2>
+    <img
+      transition:animate={fade({ duration: "5s" })}
+      src={teamImgUrl}
+      style="width:150px; height:100px;"
+    />
     <dl>
       <dt>Division</dt>
-      <dd transition:animate={fade({ duration: '5s' })}>{teams[0].division.name}</dd>
+      <dd transition:animate={fade({ duration: "5s" })}>
+        {teams[0].division.name}
+      </dd>
     </dl>
     <dl>
       <dt>Conference</dt>
-      <dd transition:animate={fade({ duration: '5s' })}>{teams[0].conference.name}</dd>
+      <dd transition:animate={fade({ duration: "5s" })}>
+        {teams[0].conference.name}
+      </dd>
     </dl>
     <dl>
       <dt>Also known as</dt>
-      <dd transition:animate={fade({ duration: '5s' })}>{teams[0].abbreviation}</dd>
+      <dd transition:animate={fade({ duration: "5s" })}>
+        {teams[0].abbreviation}
+      </dd>
     </dl>
     <dl>
       <dt>Located in</dt>
-      <dd transition:animate={fade({ duration: '5s' })}>{teams[0].locationName}</dd>
+      <dd transition:animate={fade({ duration: "5s" })}>
+        {teams[0].locationName}
+      </dd>
     </dl>
     <dl>
       <dt>First year of play</dt>
-      <dd transition:animate={fade({ duration: '5s' })}>{teams[0].firstYearOfPlay}</dd>
+      <dd transition:animate={fade({ duration: "5s" })}>
+        {teams[0].firstYearOfPlay}
+      </dd>
     </dl>
   </main>
 </Layout>
