@@ -1,7 +1,6 @@
 ---
 export const prerender = true;
 import Layout from "../../layouts/Layout.astro";
-import { fade } from "astro:transitions";
 
 const response = await fetch("https://statsapi.web.nhl.com/api/v1/teams", {
   method: "GET",
