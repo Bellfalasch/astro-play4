@@ -1,6 +1,7 @@
 import { describe, test, expect, mock, spyOn, beforeEach } from "bun:test";
 
 import { imagePathFromLocationName } from '../src/lib/utils';
+import mockFetch from './mockFetch';
 
 const pathFromLocation = mock((locationName, teamNr?) => imagePathFromLocationName(locationName, teamNr || undefined));
 //const spy = spyOn(imagePathFromLocationName);
@@ -51,5 +52,22 @@ describe('getPathNameFromLocationName', () => {
     const pathName = pathFromLocation(locationName);
     expect(pathName).toEqual('stlouis');
     expect(pathFromLocation).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe('fetch API', () => {
+   test('should return name NYR for abbrevations', async () => {
+    const resp = await mockFetch('https://api.nhle.com/stats/rest/en/team/3').then(res => res.json());
+    expect(resp[0].abbreviation).toEqual('NYR');
+    //expect(mockFetch).toHaveBeenCalledTimes(1);
+  });
+   test('should return correct "first year active" for NYR', async () => {
+    const resp = await mockFetch('https://api.nhle.com/stats/rest/en/team/3').then(res => res.json());
+    expect(resp[0].firstYearOfPlay).toEqual('1926');
+  });
+   test('should return the right division and conference for NYR', async () => {
+    const resp = await mockFetch('https://api.nhle.com/stats/rest/en/team/3').then(res => res.json());
+    expect(resp[0].division.name).toEqual('Metropolitan');
+    expect(resp[0].conference.name).toEqual('Eastern');
   });
 });
