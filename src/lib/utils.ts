@@ -14,6 +14,7 @@ export function imagePathFromLocationName(
   }
   if (teamNr === "3") {
     pathName += "rangers";
+    console.warn("This is a warning");
   }
   //}
   return pathName;

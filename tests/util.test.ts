@@ -1,8 +1,11 @@
-import { describe, test, expect, mock, beforeEach } from "bun:test";
+import { describe, test, expect, mock, beforeEach, spyOn } from "bun:test";
 
 import { imagePathFromLocationName } from '../src/lib/utils';
 
-const pathFromLocation = mock((locationName, teamNr?) => imagePathFromLocationName(locationName, teamNr || undefined));
+const pathFromLocation = mock((locationName, teamNr?) =>
+    imagePathFromLocationName(locationName, teamNr || undefined));
+
+const warn = spyOn(console, "warn").mockImplementation(() => {});
 
 beforeEach(
   () => { pathFromLocation.mockClear(); }
@@ -14,6 +17,8 @@ describe('getPathNameFromLocationName', () => {
     const pathName = pathFromLocation(locationName, "3"); 
     expect(pathName).toEqual('newyorkrangers');
     expect(pathFromLocation).toHaveBeenCalledTimes(1);
+    expect(warn).toHaveBeenCalled()
+    //expect(mockLog).toBeC
   });
   test('should return the correct IMG path for Los Angeles', () => {
     const locationName = 'Los Angeles';
